@@ -117,6 +117,20 @@ def clearStudentsFile():
 
 def loadStudentsFromFile():
   clear()
+  print("Loading students from file")
+  fileName = "students.txt"
+  jsonData = None
+  with open(fileName) as json_file:
+    jsonData = json.load(json_file)
+  
+  for uuid in jsonData:
+    student = jsonData[uuid]
+    name, dob, family = student["name"], student["dob"], student["family"]
+    familyMembers = []
+    for familyUUID in family:
+      familyJson = family[familyUUID]
+      familyMembers.append(FamilyContact(familyUUID, familyJson["name"], familyJson["relation"], familyJson["phone"], familyJson["email"]))
+    students.append(Student(uuid, name, dob, familyMembers))
 
 def clearStudentCache():
   global students
@@ -180,6 +194,7 @@ menu = {
 line = "---------- MENU ----------"
 
 while True:
+  clear()
   print(line)
   for i in menu: print(i)
   print(line)
